@@ -25,4 +25,4 @@ filebeat.prospectors:
   close_renamed: true
 
 output.logstash:
-  hosts: ["jdy-test-01:5044"]
+  hosts: ["jdy-log-01:5044"]
