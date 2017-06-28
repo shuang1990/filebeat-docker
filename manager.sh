@@ -15,10 +15,13 @@ source $devops_prj_path/base.sh
 function run() {
 
     ensure_permissions $config_path/filebeat.yml 
+    local host=`hostname`
 
     local args='--restart=always'
+    args="$args -h $host"
     args="$args -v $config_path/filebeat.yml:/filebeat.yml"
     args="$args -v /opt/data/jenkins-9douyu/runtime/storage:/tmp/log/9douyu"
+    args="$args -v /opt/data/jenkins-9douyu/runtime/logs/nginx:/tmp/log/nginx"
     run_cmd "docker run -d $args --name $filebeat_container $filebeat_image"
 }
 
