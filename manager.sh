@@ -22,6 +22,7 @@ function run() {
     args="$args -v $config_path/filebeat.yml:/filebeat.yml"
     args="$args -v /opt/data/jenkins-9douyu/runtime/storage:/tmp/log/9douyu"
     args="$args -v /opt/data/jenkins-9douyu/runtime/logs/nginx:/tmp/log/nginx"
+    args="$args -v /opt/data/jenkins-9douyu/runtime/logs/php:/tmp/log/php-fpm"
     run_cmd "docker run -d $args --name $filebeat_container $filebeat_image"
 }
 

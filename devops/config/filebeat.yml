@@ -24,5 +24,11 @@ filebeat.prospectors:
   document_type: 9douyu_nginx
   close_renamed: true
 
+- input_type: log
+  paths:
+    - /tmp/log/php-fpm/*.log
+  document_type: 9douyu_php_fpm
+  close_renamed: true
+
 output.logstash:
   hosts: ["jdy-log-01:5044"]
