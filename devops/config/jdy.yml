@@ -32,9 +32,9 @@ filebeat.prospectors:
 
 filebeat.registry_file: ${path.data}/registry/registry
 
-output.console:
-  codec.json:
-    pretty: true
+#output.console:
+#  codec.json:
+#    pretty: true
 
 output.logstash:
   hosts: ["jdy-log-01:5044"]
