@@ -30,5 +30,11 @@ filebeat.prospectors:
   document_type: 9douyu_php_fpm
   close_renamed: true
 
+filebeat.registry_file: ${path.data}/registry/registry
+
+output.console:
+  codec.json:
+    pretty: true
+
 output.logstash:
   hosts: ["jdy-log-01:5044"]
