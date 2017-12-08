@@ -1,0 +1,11 @@
+filebeat.prospectors:
+#system logs
+- input_type: log
+  paths:
+    - /tmp/log/*.log
+  document_type: system
+  close_renamed: true
+
+output.console:
+  codec.json:
+    pretty: true
