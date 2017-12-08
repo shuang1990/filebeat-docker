@@ -30,11 +30,6 @@ function ensure_dir() {
     fi
 }
 
-function ensure_permissions() {
-    run_cmd "sudo chown root $1"
-    run_cmd "sudo chmod 0644 $1"
-}
-
 function container_is_running() {
     local container_name=$1
     local num=$(docker ps -a -f name="^/$container_name$" -q | wc -l)

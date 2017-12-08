@@ -11,50 +11,72 @@ filebeat_container=filebeat
 
 source $devops_prj_path/base.sh
 app_storage_dir=/opt/data/filebeat
+container_log_dir=/tmp/log
+container_work_dir=/usr/share/filebeat
 
-function run_9dy() {
-
-    local host=`hostname`
-    local args='--restart=always'
-
-    args="$args -h $host"
-    args="$args -v $app_storage_dir/data:/usr/share/filebeat/data"
-    args="$args -v $app_storage_dir/logs:/usr/share/filebeat/logs"
-    args="$args -v $config_path/jdy.yml:/usr/share/filebeat/filebeat.yml"
-    args="$args -v /opt/data/jenkins-9douyu/runtime/storage:/tmp/log/9douyu"
-    args="$args -v /opt/data/jenkins-9douyu/runtime/logs/nginx:/tmp/log/nginx"
-    args="$args -v /opt/data/jenkins-9douyu/runtime/logs/php:/tmp/log/php-fpm"
-    run_cmd "docker run -itd $args -estrict.perms=false --name $filebeat_container $filebeat_image"
+function run_jdy() {
+    local args=''
+    local jdy_runtime_dir=/opt/data/jenkins-9douyu/runtime
+    args="$args -v $config_path/jdy.yml:$container_work_dir/filebeat.yml"
+    args="$args -v $jdy_runtime_dir/storage:$container_log_dir/9douyu"
+    args="$args -v $jdy_runtime_dir/logs/nginx:$container_log_dir/nginx"
+    args="$args -v $jdy_runtime_dir/logs/php:$container_log_dir/php-fpm"
+    _run_filebeat "$args"
 }
 
 function run_test() {
+    local args=''
+    args="$args -v $config_path/test.yml:$container_work_dir/filebeat.yml"
+    args="$args -v $prj_path/data/messages:$container_log_dir/message.log"
+    _run_filebeat "$args"
+}
+
+function _run_filebeat() {
+    ensure_dir $app_storage_dir/data/registry
+    ensure_dir $app_storage_dir/logs
+
+    chmod 777 $app_storage_dir/data/registry
 
     local host=`hostname`
-    local args='--restart=always'
+    local args=$1
 
-    args="$args -h $host"
-    args="$args -v $config_path/test.yml:/usr/share/filebeat/filebeat.yml"
-    args="$args -v /var/log/syslog:/tmp/log/"
-    run_cmd "docker run -itd $args -estrict.perms=false --name $filebeat_container $filebeat_image"
+
+    args="-h $host $args"
+    args="--restart=always $args"
+    args="$args -v $app_storage_dir/data/registry/:/usr/share/filebeat/data/registry/"
+    args="$args -v $app_storage_dir/logs:$container_work_dir/logs"
+
+    run_cmd "docker run -itd --name $filebeat_container $args $filebeat_image bash -c 'filebeat -e -strict.perms=false'"
+}
+
+function to_filebeat() {
+    local cmd='bash'
+    run_cmd "docker exec -it $filebeat_container bash -c '$cmd'" 
 }
 
 function stop() {
     stop_container $filebeat_container
 }
 
-function restart_9dy() {
+function restart_jdy() {
     stop
-    run_9dy
+    run_jdy
+}
+
+function restart_test() {
+    stop
+    run_test
 }
 
 help() {
 cat <<EOF
     Usage: manage.sh [options]
 
-        run_9dy
+        run_jdy
         run_test
         stop
-        restart
+        restart_jdy
+        restart_test
 EOF
 }
 if [ -z "$action" ]; then
