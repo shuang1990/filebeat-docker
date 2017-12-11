@@ -38,3 +38,5 @@ filebeat.registry_file: ${path.data}/registry/registry
 
 output.logstash:
   hosts: ["jdy-log-01:5044"]
+  timeout: 90
+  bulk_max_size: 16384
