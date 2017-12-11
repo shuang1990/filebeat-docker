@@ -6,7 +6,8 @@ devops_prj_path="$prj_path/devops"
 template_path="$devops_prj_path/template"   
 config_path="$devops_prj_path/config"   
 
-filebeat_image=docker.elastic.co/beats/filebeat:5.6.5
+#filebeat_image=docker.elastic.co/beats/filebeat:5.6.5
+filebeat_image=prima/filebeat:5.3.0
 filebeat_container=filebeat
 
 source $devops_prj_path/base.sh
@@ -17,7 +18,8 @@ container_work_dir=/usr/share/filebeat
 function run_jdy() {
     local args=''
     local jdy_runtime_dir=/opt/data/jenkins-9douyu/runtime
-    args="$args -v $config_path/jdy.yml:$container_work_dir/filebeat.yml"
+    #args="$args -v $config_path/jdy.yml:$container_work_dir/filebeat.yml"
+    args="$args -v $config_path/jdy.yml:/filebeat.yml"
     args="$args -v $jdy_runtime_dir/storage:$container_log_dir/9douyu"
     args="$args -v $jdy_runtime_dir/logs/nginx:$container_log_dir/nginx"
     args="$args -v $jdy_runtime_dir/logs/php:$container_log_dir/php-fpm"
