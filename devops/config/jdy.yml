@@ -3,6 +3,9 @@ filebeat.prospectors:
 - input_type: log
   paths:
     - /tmp/log/9douyu/9douyu-module/logs/*.log
+  multiline.pattern: '^\['
+  multiline.negate: true
+  multiline.match: after
   document_type: 9douyu_module
   close_renamed: true
 
@@ -10,6 +13,9 @@ filebeat.prospectors:
   paths:
     - /tmp/log/9douyu/9douyu-core/logs/*.log
   document_type: 9douyu_core
+  multiline.pattern: '^\['
+  multiline.negate: true
+  multiline.match: after
   close_renamed: true
 
 - input_type: log
@@ -32,9 +38,6 @@ filebeat.prospectors:
 
 filebeat.registry_file: ${path.data}/registry/registry
 
-multiline.pattern: '^\['
-multiline.negate: true
-multiline.match: after
 
 #output.console:
 #  codec.json:
