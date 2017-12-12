@@ -3,7 +3,7 @@ filebeat.prospectors:
 - input_type: log
   paths:
     - /tmp/log/9douyu/9douyu-module/logs/*.log
-  multiline.pattern: '^\['
+  multiline.pattern: '^\[[0-9]{4}-[0-9]{2}-[0-9]{2}'
   multiline.negate: true
   multiline.match: after
   document_type: 9douyu_module
@@ -13,7 +13,7 @@ filebeat.prospectors:
   paths:
     - /tmp/log/9douyu/9douyu-core/logs/*.log
   document_type: 9douyu_core
-  multiline.pattern: '^\['
+  multiline.pattern: '^\[[0-9]{4}-[0-9]{2}-[0-9]{2}'
   multiline.negate: true
   multiline.match: after
   close_renamed: true
