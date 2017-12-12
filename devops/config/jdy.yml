@@ -32,6 +32,10 @@ filebeat.prospectors:
 
 filebeat.registry_file: ${path.data}/registry/registry
 
+multiline.pattern: '^\['
+multiline.negate: true
+multiline.match: after
+
 #output.console:
 #  codec.json:
 #    pretty: true
