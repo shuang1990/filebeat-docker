@@ -33,7 +33,15 @@ filebeat.prospectors:
 - input_type: log
   paths:
     - /tmp/log/php-fpm/*.log
+    - /tmp/log/php-schedule/*.log
   document_type: 9douyu_php_fpm
+  close_renamed: true
+
+- input_type: log
+  paths:
+    - /tmp/log/php-fpm/php-error
+    - /tmp/log/php-schedule/php-error
+  document_type: 9douyu_php
   close_renamed: true
 
 filebeat.registry_file: ${path.data}/registry/registry

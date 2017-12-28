@@ -23,6 +23,7 @@ function run_jdy() {
     args="$args -v $jdy_runtime_dir/storage:$container_log_dir/9douyu"
     args="$args -v $jdy_runtime_dir/logs/nginx:$container_log_dir/nginx"
     args="$args -v $jdy_runtime_dir/logs/php:$container_log_dir/php-fpm"
+    args="$args -v $jdy_runtime_dir/logs/php-schedule:$container_log_dir/php-schedule"
     _run_filebeat "$args"
 }
 
