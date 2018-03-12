@@ -27,6 +27,18 @@ function run_jdy() {
     _run_filebeat "$args"
 }
 
+function run_jdy_bank() {
+    local args=''
+    local jdy_runtime_dir=/opt/data/jenkins-9douyu-bank/runtime
+    args="$args -v $config_path/jdy_bank.yml:$container_work_dir/filebeat.yml"
+    #args="$args -v $config_path/jdy.yml:/filebeat.yml"
+    args="$args -v $jdy_runtime_dir/storage:$container_log_dir/9douyu"
+    args="$args -v $jdy_runtime_dir/logs/nginx:$container_log_dir/nginx"
+    args="$args -v $jdy_runtime_dir/logs/php:$container_log_dir/php-fpm"
+    args="$args -v $jdy_runtime_dir/logs/php-schedule:$container_log_dir/php-schedule"
+    _run_filebeat "$args"
+}
+
 function run_test() {
     local args=''
     args="$args -v $config_path/test.yml:$container_work_dir/filebeat.yml"
@@ -67,6 +79,11 @@ function restart_jdy() {
     run_jdy
 }
 
+function restart_jdy_bank() {
+    stop
+    run_jdy_bank
+}
+
 function restart_test() {
     stop
     run_test
@@ -77,9 +94,11 @@ cat <<EOF
     Usage: manage.sh [options]
 
         run_jdy
+        run_jdy_bank
         run_test
         stop
         restart_jdy
+        restart_jdy_bank
         restart_test
 EOF
 }
