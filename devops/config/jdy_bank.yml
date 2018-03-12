@@ -1,0 +1,57 @@
+filebeat.prospectors:
+#9douyu
+- input_type: log
+  paths:
+    - /tmp/log/9douyu/9douyu-module/logs/*.log
+  multiline.pattern: '^\[[0-9]{4}-[0-9]{2}-[0-9]{2}'
+  multiline.negate: true
+  multiline.match: after
+  document_type: 9douyu_bank_module
+  close_renamed: true
+
+- input_type: log
+  paths:
+    - /tmp/log/9douyu/9douyu-core/logs/*.log
+  document_type: 9douyu_bank_core
+  multiline.pattern: '^\[[0-9]{4}-[0-9]{2}-[0-9]{2}'
+  multiline.negate: true
+  multiline.match: after
+  close_renamed: true
+
+- input_type: log
+  paths:
+    - /tmp/log/9douyu/9douyu-service/logs/*.log
+  document_type: 9douyu_bank_service
+  close_renamed: true
+
+- input_type: log
+  paths:
+    - /tmp/log/nginx/*.log
+  document_type: 9douyu_bank_nginx
+  close_renamed: true
+
+- input_type: log
+  paths:
+    - /tmp/log/php-fpm/*.log
+    - /tmp/log/php-schedule/*.log
+  document_type: 9douyu_bank_php_fpm
+  close_renamed: true
+
+- input_type: log
+  paths:
+    - /tmp/log/php-fpm/php-error
+    - /tmp/log/php-schedule/php-error
+  document_type: 9douyu_bank_php
+  close_renamed: true
+
+filebeat.registry_file: ${path.data}/registry/registry
+
+
+#output.console:
+#  codec.json:
+#    pretty: true
+
+output.logstash:
+  hosts: ["jdy-log-01:5044"]
+  timeout: 90
+  bulk_max_size: 16384
